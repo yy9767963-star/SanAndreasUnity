@@ -25,6 +25,7 @@ namespace SanAndreasUnity.UI {
 				s_isOpened = value;
 
 				Instance.canvas.enabled = s_isOpened;
+				Instance.OnOpenedChanged(s_isOpened);
 			}
 		}
 
@@ -51,6 +52,24 @@ namespace SanAndreasUnity.UI {
 
 			this.canvas.enabled = IsOpened;
 
+		}
+
+		void OnOpenedChanged(bool opened)
+		{
+			var eventSystem = UnityEngine.EventSystems.EventSystem.current;
+			if (null == eventSystem)
+				return;
+
+			if (opened)
+			{
+				var first = this.menuBar.MenuBarEntries.FirstOrDefault();
+				if (first != null)
+					eventSystem.SetSelectedGameObject(first.gameObject);
+			}
+			else
+			{
+				eventSystem.SetSelectedGameObject(null);
+			}
 		}
 
 		public	static	PauseMenuWindow[]	GetAllWindows() {
